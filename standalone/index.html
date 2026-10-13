@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Tekken Clash - 3D WebGL Championship</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Three.js loaded from CDN (no build step required) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Google Fonts for Tekken martial arts display typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700&family=Teko:wght@600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="game-container">
+    <!-- 3D WebGL Canvas rendered by Three.js -->
+    <canvas id="game-canvas"></canvas>
+    <div class="screen-vignette"></div>
+
+    <!-- Quick action status icons -->
+    <div class="top-status-bar">
+      <div id="p2p-status-badge" class="p2p-badge hidden">
+        <span class="status-dot"></span>
+        <span id="p2p-badge-text">P2P CONNECTED</span>
+      </div>
+      <button id="btn-quick-sound" class="icon-btn" title="Toggle Sound">🔊</button>
+      <button id="btn-quick-hitboxes" class="icon-btn" title="Toggle 3D Hitbox Volumes (Key: B)">👁️</button>
+    </div>
+
+    <!-- FIGHT HUD (Visible during active gameplay) -->
+    <div id="fight-hud" class="hidden">
+      <div class="hud-top">
+        <!-- Player 1 Status -->
+        <div class="player-hud-card p1-card">
+          <div class="fighter-meta">
+            <span class="fighter-name" id="p1-name" style="color: #ff3355;">JIN K.</span>
+            <div class="round-indicators" id="p1-rounds">
+              <div class="round-pip" id="p1-pip-1"></div>
+              <div class="round-pip" id="p1-pip-2"></div>
+            </div>
+          </div>
+          <div class="health-bar-container p1-bar" id="p1-bar-wrap">
+            <div class="health-bar-red" id="p1-health-red"></div>
+            <div class="health-bar-fill" id="p1-health-bar"></div>
+          </div>
+        </div>
+
+        <!-- Central Timer -->
+        <div class="timer-box">
+          <span class="timer-text" id="timer-val">60</span>
+        </div>
+
+        <!-- Player 2 Status -->
+        <div class="player-hud-card p2-card">
+          <div class="fighter-meta">
+            <div class="round-indicators" id="p2-rounds">
+              <div class="round-pip" id="p2-pip-1"></div>
+              <div class="round-pip" id="p2-pip-2"></div>
+            </div>
+            <span class="fighter-name" id="p2-name" style="color: #00ddff;">KAZUYA M.</span>
+          </div>
+          <div class="health-bar-container p2-bar" id="p2-bar-wrap">
+            <div class="health-bar-red" id="p2-health-red"></div>
+            <div class="health-bar-fill" id="p2-health-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combo Counter Streaks -->
+      <div class="combo-banner p1-combo" id="p1-combo-box">
+        <span class="combo-hits-num" id="p1-combo-num">3</span>
+        <span class="combo-hits-label">HITS COMBO</span>
+      </div>
+      <div class="combo-banner p2-combo" id="p2-combo-box">
+        <span class="combo-hits-num" id="p2-combo-num">3</span>
+        <span class="combo-hits-label">HITS COMBO</span>
+      </div>
+
+      <!-- Center Fight Announcement ("ROUND 1", "FIGHT!", "K.O.") -->
+      <div class="announcement-banner" id="fight-announcement">ROUND 1</div>
+
+      <!-- 4-Limb Legend HUD at Bottom -->
+      <div class="controls-legend">
+        <div>
+          <div class="legend-title">
+            <span>P1 (KAZAMA STYLE)</span>
+            <span class="sidestep-hint">3D SIDESTEP: <kbd>W</kbd> or <kbd>S</kbd></span>
+          </div>
+          <div class="legend-keys">
+            <span><strong class="tag-lp">LP:</strong> <kbd>U</kbd></span>
+            <span><strong class="tag-rp">RP:</strong> <kbd>I</kbd></span>
+            <span><strong class="tag-lk">LK:</strong> <kbd>J</kbd></span>
+            <span><strong class="tag-rk">RK:</strong> <kbd>K</kbd></span>
+            <span class="special-hint">EWGF God Fist: <kbd>S+D+I</kbd> or <kbd>U+I</kbd></span>
+          </div>
+        </div>
+        <div>
+          <div class="legend-title">
+            <span id="p2-legend-header">P2 (MISHIMA STYLE)</span>
+            <span class="sidestep-hint" id="p2-sidestep-hint">3D SIDESTEP: <kbd>↑</kbd> or <kbd>↓</kbd></span>
+          </div>
+          <div class="legend-keys" id="p2-legend-keys">
+            <span><strong class="tag-lp">LP:</strong> <kbd>Num 7</kbd> / <kbd>Y</kbd></span>
+            <span><strong class="tag-rp">RP:</strong> <kbd>Num 8</kbd></span>
+            <span><strong class="tag-lk">LK:</strong> <kbd>Num 4</kbd> / <kbd>H</kbd></span>
+            <span><strong class="tag-rk">RK:</strong> <kbd>Num 5</kbd></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TITLE SCREEN (Matches Reference UI) -->
+    <div class="screen-overlay" id="title-screen">
+      <h1 class="game-logo-tekken">TEKKEN CLASH</h1>
+      <p class="subtitle-ironfist">THE KING OF IRON FIST CHAMPIONSHIP</p>
+
+      <div class="career-bar">
+        <span>PLAYER 1 VICTORIES: <strong id="rec-p1" style="color: #ff3355;">0</strong></span>
+        <span>•</span>
+        <span>PLAYER 2 VICTORIES: <strong id="rec-p2" style="color: #00ddff;">0</strong></span>
+      </div>
+
+      <div class="menu-btn-group">
+        <button class="tekken-btn" id="btn-start-local">BATTLE MODE (2-PLAYER)</button>
+        <button class="tekken-btn online" id="btn-start-online">ONLINE BATTLE (2 COMPUTERS)</button>
+        <button class="tekken-btn secondary" id="btn-open-settings">OPTIONS & CONTROLS</button>
+      </div>
+    </div>
+
+    <!-- ONLINE MULTIPLAYER LOBBY (WebRTC Host / Join) -->
+    <div class="screen-overlay hidden" id="online-lobby-screen">
+      <div class="lobby-card">
+        <div class="lobby-header">
+          <div>
+            <h2 class="title-online">ONLINE MATCHMAKING</h2>
+            <p class="subtitle-small">Cross-Computer WebRTC Peer-to-Peer Battle</p>
+          </div>
+          <button class="icon-btn" id="btn-close-lobby">✕</button>
+        </div>
+
+        <!-- Host Section -->
+        <div class="lobby-section">
+          <h3>HOST A ROOM (PLAYER 1)</h3>
+          <p class="section-desc">Create a private room code and send it to Player 2 on another computer.</p>
+          
+          <div id="host-idle-box">
+            <button class="tekken-btn" id="btn-host-create">CREATE ROOM CODE</button>
+          </div>
+          <div id="host-active-box" class="hidden">
+            <div class="room-code-display">
+              <span class="code-label">ROOM CODE:</span>
+              <span class="code-val" id="room-code-val">TK88F1</span>
+            </div>
+            <button class="tekken-btn secondary" id="btn-copy-link">📋 COPY DIRECT INVITE LINK</button>
+            <div class="waiting-indicator">
+              <span class="pulse-dot"></span> Waiting for Player 2 to join...
+            </div>
+          </div>
+        </div>
+
+        <!-- Join Section -->
+        <div class="lobby-section">
+          <h3 style="color: #00ddff;">JOIN A ROOM (PLAYER 2)</h3>
+          <p class="section-desc">Enter the room code from Player 1's screen to connect instantly.</p>
+          <div class="join-row">
+            <input type="text" id="join-code-input" placeholder="e.g. TK88F1" maxlength="10" />
+            <button class="tekken-btn online" id="btn-join-room">JOIN BATTLE</button>
+          </div>
+        </div>
+
+        <p class="status-footer" id="online-status-footer"></p>
+      </div>
+    </div>
+
+    <!-- CHARACTER & ARENA SELECT -->
+    <div class="screen-overlay hidden" id="select-screen">
+      <h2 class="screen-title">CHARACTER & STAGE SELECT</h2>
+      <p class="screen-subtitle">CHOOSE YOUR COMBATANT AND ARENA</p>
+
+      <div class="selection-grid">
+        <!-- Fighters -->
+        <div class="panel-box">
+          <div class="panel-title">FIGHTER ROSTER</div>
+          <div class="roster-row">
+            <div class="char-card selected-p1" id="card-jin" data-fighter="jin">
+              <div class="char-avatar" style="background: radial-gradient(circle, #550510 0%, #150005 100%);">⚡</div>
+              <h3 style="color: #ff3355;">JIN K.</h3>
+              <p class="char-style">Traditional Karate & Devil Gene</p>
+              <div class="char-intel">
+                <div>• Speed: 9.5 / 10</div>
+                <div>• Move: Electric Wind God Fist (EWGF)</div>
+              </div>
+            </div>
+
+            <div class="char-card selected-p2" id="card-kazuya" data-fighter="kazuya">
+              <div class="char-avatar" style="background: radial-gradient(circle, #052044 0%, #000c1e 100%);">👿</div>
+              <h3 style="color: #00ddff;">KAZUYA M.</h3>
+              <p class="char-style">Mishima Karate Powerhouse</p>
+              <div class="char-intel">
+                <div>• Power: 9.9 / 10</div>
+                <div>• Move: Dragon Uppercut Launcher</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arenas -->
+        <div class="panel-box" style="max-width: 360px;">
+          <div class="panel-title">ARENA SELECT</div>
+          <div class="stage-list">
+            <div class="stage-card active-stage" id="stage-dojo" data-stage="dojo">
+              <span class="stage-icon">⛩️</span>
+              <div>
+                <strong>Mishima Dojo</strong>
+                <p>Tatami platform with lanterns & crimson pillars</p>
+              </div>
+            </div>
+            <div class="stage-card" id="stage-caldera" data-stage="caldera">
+              <span class="stage-icon">🌋</span>
+              <div>
+                <strong>Volcano Caldera</strong>
+                <p>Dark basalt arena surrounded by magma lakes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-btn-group" style="flex-direction: row; gap: 20px;">
+        <button class="tekken-btn" id="btn-proceed-battle" style="min-width: 240px;">PROCEED TO BATTLE</button>
+        <button class="tekken-btn secondary" id="btn-select-back" style="min-width: 140px;">BACK</button>
+      </div>
+    </div>
+
+    <!-- ICONIC VERSUS SPLASH SCREEN -->
+    <div id="vs-splash-screen" class="hidden">
+      <div class="vs-backdrop">
+        <div class="vs-split-p1"></div>
+        <div class="vs-split-p2"></div>
+      </div>
+      <div class="vs-content">
+        <div class="vs-banner">GET READY FOR THE NEXT BATTLE</div>
+        <div class="vs-row">
+          <div class="vs-card p1-side">
+            <span class="vs-label">PLAYER 1</span>
+            <div class="vs-avatar">⚡</div>
+            <h2 id="vs-p1-name">JIN K.</h2>
+            <p>THE LIGHTNING AVANGER</p>
+          </div>
+          <div class="vs-symbol">VS</div>
+          <div class="vs-card p2-side">
+            <span class="vs-label" style="color: #00ddff;">PLAYER 2</span>
+            <div class="vs-avatar">👿</div>
+            <h2 id="vs-p2-name">KAZUYA M.</h2>
+            <p>HEIR OF THE MISHIMA EMPIRE</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="screen-overlay hidden" id="settings-screen">
+      <div class="settings-card">
+        <h2 style="font-family: 'Orbitron'; font-size: 2rem; color: #ffcc00; margin-bottom: 20px;">GAME CONFIGURATION</h2>
+        <div class="setting-row">
+          <span>Round Time Limit</span>
+          <div class="time-btns">
+            <button class="tekken-btn secondary timer-opt" data-time="30">30s</button>
+            <button class="tekken-btn timer-opt" data-time="60">60s</button>
+            <button class="tekken-btn secondary timer-opt" data-time="99">99s</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <span>Web Audio Impact FX</span>
+          <button class="tekken-btn secondary" id="btn-settings-audio">Audio: ON</button>
+        </div>
+        <div class="setting-row">
+          <span>3D Hitbox Visualizer (Hot: B)</span>
+          <button class="tekken-btn secondary" id="btn-settings-hitboxes">Hitboxes: OFF</button>
+        </div>
+        <div class="setting-row">
+          <span>Career Score Record</span>
+          <button class="tekken-btn secondary" id="btn-reset-career" style="color: #ff5555;">Reset Records</button>
+        </div>
+        <button class="tekken-btn" id="btn-close-settings" style="margin-top: 15px; width: 100%;">SAVE & RETURN</button>
+      </div>
+    </div>
+
+    <!-- PAUSE MENU -->
+    <div class="screen-overlay hidden" id="pause-screen">
+      <h2 style="font-family: 'Orbitron'; font-size: 4rem; color: #ff3344; margin-bottom: 30px;">MATCH PAUSED</h2>
+      <div class="menu-btn-group">
+        <button class="tekken-btn" id="btn-resume-match">RESUME BATTLE</button>
+        <button class="tekken-btn secondary" id="btn-pause-audio">TOGGLE SOUND</button>
+        <button class="tekken-btn secondary" id="btn-quit-match">RETURN TO TITLE</button>
+      </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div class="screen-overlay hidden" id="results-screen">
+      <h1 class="game-logo-tekken" id="results-winner" style="font-size: 4.8rem;">JIN K. WINS!</h1>
+      <p class="subtitle-ironfist" id="results-subtext">GREAT K.O. FINISH</p>
+      <div class="menu-btn-group" style="margin-top: 15px;">
+        <button class="tekken-btn" id="btn-rematch">REMATCH</button>
+        <button class="tekken-btn secondary" id="btn-results-select">FIGHTER SELECT</button>
+        <button class="tekken-btn secondary" id="btn-results-title">TITLE SCREEN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Logic Script (self-contained plain JavaScript) -->
+  <script src="game.js"></script>
+</body>
+</html>

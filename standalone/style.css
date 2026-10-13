@@ -1,0 +1,684 @@
+/* ==========================================================================
+   TEKKEN CLASH - Standalone Stylesheet (CSS)
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #030305;
+  font-family: 'Rajdhani', -apple-system, sans-serif;
+  color: #fff;
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #020205;
+  overflow: hidden;
+}
+
+canvas#game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+}
+
+.screen-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow: inset 0 0 120px rgba(0,0,0,0.85);
+  background: radial-gradient(circle at center, transparent 40%, rgba(5,2,8,0.7) 100%);
+}
+
+.top-status-bar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  background: rgba(18, 22, 38, 0.85);
+  border: 1px solid #2e3756;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.icon-btn:hover {
+  background: #1f2742;
+  border-color: #00ddff;
+}
+
+.p2p-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(0, 20, 35, 0.85);
+  border: 1px solid rgba(0, 221, 255, 0.5);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #00ddff;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ffaa;
+  box-shadow: 0 0 8px #00ffaa;
+  animation: pulseDot 1s infinite alternate;
+}
+@keyframes pulseDot {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Screen UI Overlays */
+.screen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(6, 6, 10, 0.88);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.28s, visibility 0.28s;
+}
+.screen-overlay.hidden, .hidden {
+  display: none !important;
+}
+
+/* Tekken Gritty Metallic Typography */
+.game-logo-tekken {
+  font-family: 'Orbitron', 'Teko', sans-serif;
+  font-size: clamp(3.2rem, 7vw, 5.8rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  line-height: 0.9;
+  background: linear-gradient(180deg, #ffffff 0%, #ff1a1a 45%, #880000 85%, #ffcc00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 25px rgba(255, 30, 0, 0.85)) drop-shadow(0 10px 4px #000);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.subtitle-ironfist {
+  font-family: 'Teko', sans-serif;
+  font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  color: #ffaa33;
+  text-shadow: 0 0 15px rgba(255, 120, 0, 0.8);
+  margin-bottom: 30px;
+}
+
+/* Tekken Angular Menu Buttons */
+.menu-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 320px;
+}
+
+.tekken-btn {
+  padding: 13px 32px;
+  font-family: 'Teko', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, #181924 0%, #0d0e15 100%);
+  border: 2px solid #ff2222;
+  border-left: 6px solid #ff2222;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.tekken-btn:hover {
+  background: linear-gradient(90deg, #ff1133 0%, #ff6600 100%);
+  border-color: #ffe600;
+  border-left-color: #ffe600;
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 20, 40, 0.75);
+  color: #fff;
+}
+.tekken-btn.secondary {
+  background: rgba(18, 20, 30, 0.7);
+  border-color: #3b4260;
+  border-left-color: #556090;
+  color: #b0c0e0;
+}
+.tekken-btn.secondary:hover {
+  border-color: #00ddff;
+  border-left-color: #00ddff;
+  background: linear-gradient(90deg, #0f3560, #16568c);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.6);
+}
+.tekken-btn.online {
+  border-color: #00ddff;
+  border-left-color: #00ddff;
+  background: linear-gradient(135deg, #0c2035 0%, #06111e 100%);
+}
+.tekken-btn.online:hover {
+  background: linear-gradient(90deg, #0077ff, #00eeff);
+  border-color: #fff;
+  border-left-color: #fff;
+}
+
+/* Career Bar */
+.career-bar {
+  display: flex;
+  gap: 20px;
+  background: #0f1220;
+  border: 1px solid rgba(255, 50, 50, 0.6);
+  padding: 6px 24px;
+  border-radius: 20px;
+  font-size: 1rem;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 20px rgba(255, 0, 0, 0.15);
+}
+
+/* FIGHT HUD */
+#fight-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 35px;
+}
+.hud-top {
+  display: grid;
+  grid-template-columns: 1fr 140px 1fr;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+.player-hud-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.p1-card { align-items: flex-start; }
+.p2-card { align-items: flex-end; }
+
+.fighter-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.fighter-name {
+  font-family: 'Teko', sans-serif;
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.round-indicators {
+  display: flex;
+  gap: 8px;
+}
+.round-pip {
+  width: 18px;
+  height: 18px;
+  background: #0f121d;
+  border: 2px solid #ff3333;
+  transform: rotate(45deg);
+  transition: all 0.3s ease;
+}
+.round-pip.won {
+  background: #ffcc00;
+  border-color: #ffffff;
+  box-shadow: 0 0 15px #ffcc00, 0 0 5px #fff;
+}
+
+.health-bar-container {
+  width: 100%;
+  height: 32px;
+  background: #090b12;
+  border: 2px solid #363d59;
+  clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
+}
+.health-bar-container.rage-active {
+  border-color: #ff1100;
+  box-shadow: 0 0 25px rgba(255, 30, 0, 0.9), inset 0 0 12px #ff0000;
+  animation: ragePulse 0.9s infinite alternate;
+}
+@keyframes ragePulse {
+  0% { box-shadow: 0 0 15px rgba(255, 30, 0, 0.6); }
+  100% { box-shadow: 0 0 35px rgba(255, 60, 0, 1), 0 0 10px #ffe600; }
+}
+
+.health-bar-red {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #6e0c0c;
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.health-bar-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  transition: width 0.12s linear;
+}
+.p1-bar .health-bar-fill {
+  left: 0;
+  background: linear-gradient(90deg, #ff1a1a 0%, #ffaa00 80%, #ffffff 100%);
+}
+.p1-bar .health-bar-red { left: 0; }
+.p2-bar .health-bar-fill {
+  right: 0;
+  background: linear-gradient(270deg, #0077ff 0%, #00f0ff 80%, #ffffff 100%);
+}
+.p2-bar .health-bar-red { right: 0; }
+
+.timer-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #200404 0%, #080a12 100%);
+  border: 3px solid #ff2222;
+  clip-path: polygon(15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%, 0 50%);
+  padding: 6px 14px;
+}
+.timer-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.4rem;
+  font-weight: 900;
+  color: #ffe600;
+  line-height: 1;
+}
+
+.combo-banner {
+  position: absolute;
+  top: 130px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.combo-banner.p1-combo { left: 60px; color: #ff3344; align-items: flex-start; }
+.combo-banner.p2-combo { right: 60px; color: #00ddff; align-items: flex-end; }
+.combo-banner.show { opacity: 1; }
+.combo-hits-num { font-size: 4rem; line-height: 0.9; }
+.combo-hits-label { font-size: 1.4rem; color: #ffcc00; letter-spacing: 3px; }
+
+.announcement-banner {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%) skewX(-8deg);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 6.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  color: #ffffff;
+  text-shadow: 0 0 50px rgba(255, 20, 20, 0.9), 0 8px 0 #550000;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.announcement-banner.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) skewX(-8deg) scale(1.1);
+}
+
+.controls-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background: rgba(8, 10, 16, 0.88);
+  border: 1px solid #2e344e;
+  border-top: 2px solid #ff3333;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+}
+.legend-title {
+  font-family: 'Teko', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffaa33;
+  display: flex;
+  justify-content: space-between;
+}
+.sidestep-hint {
+  font-size: 0.8rem;
+  color: #88a0cc;
+  font-family: 'Rajdhani', sans-serif;
+}
+kbd {
+  background: #1a1e2f;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid #4a5477;
+  font-weight: bold;
+}
+.tag-lp, .tag-rp, .tag-lk, .tag-rk { color: #ffe600; margin-left: 6px; }
+.special-hint { color: #ff5566; margin-left: 10px; font-weight: bold; }
+
+/* VERSUS SCREEN */
+#vs-splash-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: #020204;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.vs-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.vs-split-p1 {
+  flex: 1;
+  background: linear-gradient(135deg, #330009, #150004);
+  border-right: 4px solid #ff0033;
+  transform: skewX(-12deg) scale(1.1);
+}
+.vs-split-p2 {
+  flex: 1;
+  background: linear-gradient(135deg, #021a36, #000a18);
+  transform: skewX(-12deg) scale(1.1);
+}
+.vs-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1050px;
+}
+.vs-banner {
+  font-family: 'Orbitron';
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: #ffe600;
+  text-shadow: 0 0 20px #ffaa00;
+  margin-bottom: 25px;
+}
+.vs-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.vs-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 360px;
+  background: rgba(10, 12, 20, 0.7);
+  border: 2px solid #ff2244;
+  padding: 24px;
+  border-radius: 6px;
+}
+.vs-card.p2-side { border-color: #00bbff; }
+.vs-label { font-family: 'Teko'; font-size: 1.4rem; color: #ff4466; letter-spacing: 3px; }
+.vs-avatar { font-size: 4.5rem; margin: 10px 0; }
+.vs-card h2 { font-family: 'Teko'; font-size: 3rem; font-weight: 800; }
+.vs-symbol {
+  font-family: 'Orbitron';
+  font-size: 6rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 30px #ff0000;
+  animation: pulseVs 0.5s infinite alternate;
+}
+@keyframes pulseVs {
+  0% { transform: scale(0.95); }
+  100% { transform: scale(1.08); }
+}
+
+/* LOBBY MODAL */
+.lobby-card {
+  width: 90%;
+  max-width: 580px;
+  background: #0e1322;
+  border: 2px solid rgba(0, 221, 255, 0.4);
+  border-radius: 12px;
+  padding: 28px;
+}
+.lobby-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222d48;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+.title-online { font-family: 'Orbitron'; font-size: 1.6rem; color: #00ddff; }
+.subtitle-small { font-size: 0.8rem; color: #8899aa; }
+.lobby-section {
+  background: #141b30;
+  border: 1px solid #2b375a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.lobby-section h3 {
+  font-family: 'Teko';
+  font-size: 1.3rem;
+  color: #ffaa33;
+  margin-bottom: 4px;
+}
+.section-desc { font-size: 0.8rem; color: #9ab; margin-bottom: 12px; }
+.room-code-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #080b15;
+  border: 1px solid rgba(255, 50, 50, 0.6);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.code-label { font-size: 0.8rem; color: #889; }
+.code-val { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; color: #ffcc00; letter-spacing: 4px; }
+.waiting-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #ffcc00;
+  margin-top: 10px;
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffcc00;
+  animation: pulseDot 0.8s infinite alternate;
+}
+.join-row { display: flex; gap: 10px; }
+.join-row input {
+  flex: 1;
+  background: #080b15;
+  border: 1px solid #344066;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: 'Orbitron';
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.status-footer { text-align: center; font-size: 0.8rem; color: #88a; margin-top: 8px; }
+
+/* SELECTION SCREEN */
+.screen-title { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 2px; }
+.screen-subtitle { font-size: 1rem; color: #ffaa33; letter-spacing: 3px; font-weight: 700; margin-bottom: 20px; }
+.selection-grid { display: flex; gap: 24px; max-width: 950px; width: 95%; margin-bottom: 24px; }
+.panel-box {
+  flex: 1;
+  background: rgba(12, 14, 24, 0.85);
+  border: 1px solid #28304c;
+  border-radius: 8px;
+  padding: 18px;
+}
+.panel-title {
+  font-family: 'Teko';
+  font-size: 1.5rem;
+  color: #ffaa33;
+  border-bottom: 1px solid #2b3552;
+  text-align: center;
+  padding-bottom: 4px;
+  margin-bottom: 14px;
+}
+.roster-row { display: flex; gap: 14px; justify-content: center; }
+.char-card {
+  width: 200px;
+  background: #141728;
+  border: 2px solid #2a3150;
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.2s;
+}
+.char-card.selected-p1 {
+  border-color: #ff2244;
+  box-shadow: 0 0 20px rgba(255, 34, 68, 0.5);
+  background: #201319;
+}
+.char-card.selected-p2 {
+  border-color: #00ddff;
+  box-shadow: 0 0 20px rgba(0, 221, 255, 0.5);
+  background: #0f1c2b;
+}
+.char-avatar {
+  width: 100%;
+  height: 90px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+.char-card h3 { font-family: 'Teko'; font-size: 1.8rem; line-height: 1; }
+.char-style { font-size: 0.75rem; color: #aab; text-align: center; margin-bottom: 6px; }
+.char-intel {
+  font-size: 0.72rem;
+  background: rgba(0,0,0,0.4);
+  padding: 6px;
+  border-radius: 4px;
+  width: 100%;
+  color: #8899aa;
+}
+
+.stage-list { display: flex; flex-direction: column; gap: 10px; }
+.stage-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #121526;
+  border: 2px solid #2b3353;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.stage-card.active-stage {
+  border-color: #ffcc00;
+  background: #1d2238;
+}
+.stage-icon { font-size: 2rem; }
+.stage-card strong { font-size: 1rem; color: #ffaa33; }
+.stage-card p { font-size: 0.75rem; color: #8899aa; }
+
+/* SETTINGS MODAL */
+.settings-card {
+  width: 90%;
+  max-width: 550px;
+  background: #0f1220;
+  border: 1px solid #283152;
+  border-radius: 8px;
+  padding: 24px;
+}
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1a2038;
+  padding: 12px 0;
+  font-size: 1rem;
+}
+.time-btns { display: flex; gap: 8px; }
+.timer-opt { padding: 4px 14px; font-size: 1.1rem; }

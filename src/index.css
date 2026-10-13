@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #030306;
+    font-family: 'Rajdhani', -apple-system, sans-serif;
+    color: #fff;
+  }
+}
+
+/* Tekken Gritty Metallic Typography */
+.game-logo-tekken {
+  font-family: 'Orbitron', 'Teko', sans-serif;
+  font-size: clamp(3.2rem, 7vw, 5.8rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  line-height: 0.95;
+  background: linear-gradient(180deg, #ffffff 0%, #ff2020 45%, #880000 85%, #ffcc00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 30, 0, 0.85)) drop-shadow(0 10px 4px #000);
+  text-align: center;
+  position: relative;
+}
+
+.subtitle-ironfist {
+  font-family: 'Teko', sans-serif;
+  font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  color: #ffaa33;
+  text-shadow: 0 0 18px rgba(255, 120, 0, 0.8);
+}
+
+/* Tekken Angular Buttons */
+.tekken-btn {
+  padding: 12px 32px;
+  font-family: 'Teko', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1c1d2b 0%, #0d0e16 100%);
+  border: 2px solid #ff2222;
+  border-left: 6px solid #ff2222;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tekken-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #ff1133 0%, #ff6600 100%);
+  border-color: #ffe600;
+  border-left-color: #ffe600;
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 20, 40, 0.75);
+  color: #fff;
+}
+
+.tekken-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+.tekken-btn.secondary {
+  background: rgba(18, 20, 32, 0.75);
+  border-color: #3b4260;
+  border-left-color: #556090;
+  color: #b0c0e0;
+}
+
+.tekken-btn.secondary:hover:not(:disabled) {
+  border-color: #00ddff;
+  border-left-color: #00ddff;
+  background: linear-gradient(90deg, #0f3560, #16568c);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 220, 255, 0.6);
+}
+
+.tekken-btn.online {
+  border-color: #00ddff;
+  border-left-color: #00ddff;
+  background: linear-gradient(135deg, #0e243d 0%, #081525 100%);
+}
+
+.tekken-btn.online:hover:not(:disabled) {
+  background: linear-gradient(90deg, #0077ff 0%, #00f0ff 100%);
+  border-color: #ffffff;
+  border-left-color: #ffffff;
+  box-shadow: 0 0 25px rgba(0, 220, 255, 0.8);
+}
+
+/* Rage Mode Border Animation */
+@keyframes ragePulse {
+  0% { box-shadow: 0 0 15px rgba(255, 30, 0, 0.6); }
+  100% { box-shadow: 0 0 35px rgba(255, 60, 0, 1), 0 0 10px #ffe600; }
+}
+
+.rage-active {
+  border-color: #ff1100 !important;
+  box-shadow: 0 0 25px rgba(255, 30, 0, 0.9), inset 0 0 12px #ff0000 !important;
+  animation: ragePulse 0.9s infinite alternate;
+}
+
+/* Screen Vignette */
+.screen-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow: inset 0 0 120px rgba(0,0,0,0.85);
+  background: radial-gradient(circle at center, transparent 40%, rgba(5,2,8,0.7) 100%);
+}
+
+/* Versus screen animation */
+@keyframes pulseVs {
+  0% { transform: scale(0.95); }
+  100% { transform: scale(1.08); }
+}
+
+.animate-pulse-vs {
+  animation: pulseVs 0.5s infinite alternate;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Tekken Clash 3D WebGL",
+  "description": "Arcade 3D fighting game featuring 4-limb combat, Z-axis sidesteps, local 2-player keyboard mode, and WebRTC cross-computer multiplayer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
